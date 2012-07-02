@@ -412,11 +412,15 @@ abstract class Mango_Core implements Mango_Interface {
 					'limit'    => $limit,
 					'criteria' => $criteria
 				);
+                $obj = Mango::factory($relation['model']);
 
-				$this->_related[$name] = Mango::factory($relation['model'])->load( $parameters );
+                if(!$obj->embedded()){
+				    $this->_related[$name] = $obj->load( $parameters );
+			        return $this->_related[$name];
+
+                }
 			}
-
-			return $this->_related[$name];
+            return array(); 
 		}
 		else
 		{
@@ -1460,6 +1464,10 @@ abstract class Mango_Core implements Mango_Interface {
 
 		return $value;
 	}
+    
+    public function embedded(){
+        return $this->_embedded;
+    }
 
 	/**
 	 * Checks if model is related to supplied model
